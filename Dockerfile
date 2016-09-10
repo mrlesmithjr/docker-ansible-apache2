@@ -10,12 +10,10 @@ COPY config/ansible/ /
 
 # Run Ansible playbook
 RUN ansible-playbook -i "localhost," -c local /playbook.yml \
-  --extra-vars "apache2_enable_php=$APACHE2_ENABLE_PHP"
-
-# Cleanup
-RUN apt-get -y clean && \
-    apt-get -y autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  --extra-vars "apache2_enable_php=$APACHE2_ENABLE_PHP" && \
+  apt-get -y clean && \
+  apt-get -y autoremove && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy Docker Entrypoint
 COPY docker-entrypoint.sh /
