@@ -1,0 +1,15 @@
+version: '2'
+services:
+  apache2:
+    environment:
+      APACHE2_ENABLE_PHP: "true"
+    image: "mrlesmithjr/apache2"
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: "always"
+    volumes:
+      - "apache2_www:/var/www"
+
+volumes:
+  apache2_www:
