@@ -26,4 +26,4 @@ COPY config/supervisord/*.conf /etc/supervisor/conf.d/
 # Expose ports
 EXPOSE 80 443
 
-VOLUME ["/var/www"]
+#VOLUME ["/var/www"]
