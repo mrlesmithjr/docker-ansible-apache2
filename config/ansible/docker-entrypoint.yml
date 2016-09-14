@@ -31,10 +31,8 @@
             ansible_distribution_version >= '16.04')
 
     - name: Installing PHP
-      apt:
-        name: "libapache2-mod-php{{ php_ver }}"
+      apk:
+        name: "php5-apache2"
         state: "present"
-        install_recommends: no
-        update_cache: yes
       when: >
             apache2_enable_php == "true"

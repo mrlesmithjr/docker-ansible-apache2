@@ -3,36 +3,17 @@
   become: true
   connection: local
   vars:
-    gosu_ver: '1.9'
   roles:
   tasks:
-    - name: Installing apt-transport-https
-      apt:
-        name: "apt-transport-https"
-        state: "present"
-
-    - name: Installing ca-certificates
-      apt:
-        name: "ca-certificates"
-        state: "latest"
-
-    - name: Installing dumb-init
-      apt:
-        deb: "https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64.deb"
-
-    - name: Installing gosu
-      get_url:
-        url: "https://github.com/tianon/gosu/releases/download/{{ gosu_ver }}/gosu-amd64"
-        dest: "/usr/local/bin/gosu"
-        mode: 0755
+    - name: Updating APK Cache
+      apk:
+        update_cache: yes
 
     - name: Installing Pre-Reqs
-      apt:
+      apk:
         name: "{{ item }}"
         state: "present"
-        install_recommends: no
       with_items:
-        - 'cron'
         - 'rsyslog'
         - 'supervisor'
 
@@ -62,17 +43,21 @@
             ansible_distribution_version >= '16.04')
 
     - name: Installing Apache2
-      apt:
+      apk:
         name: "apache2"
         state: "present"
-        update_cache: true
-        install_recommends: no
 
     - name: Installing PHP
-      apt:
-        name: "libapache2-mod-php{{ php_ver }}"
+      apk:
+        name: "php5-apache2"
         state: "present"
-        install_recommends: no
-        update_cache: yes
       when: >
             apache2_enable_php == "true"
+
+    - name: Creating Folders
+      file:
+        path: "{{ item }}"
+        state: "directory"
+      with_items:
+        - '/etc/supervisor.d'
+        - '/run/apache2'
