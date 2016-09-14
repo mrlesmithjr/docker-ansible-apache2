@@ -17,30 +17,19 @@
         - 'rsyslog'
         - 'supervisor'
 
-    - name: setting Debian facts
+    - name: setting Alpine facts
       set_fact:
         apache2_log_dir: "/var/log/apache2"
-        apache2_web_group: "www-data"
-        apache2_web_owner: "www-data"
-        apache2_web_root: "/var/www/html"
-      when: ansible_os_family == "Debian"
+        apache2_web_group: "apache"
+        apache2_web_owner: "apache"
+        apache2_web_root: "/var/www"
+      when: ansible_os_family == "Alpine"
 
     - name: setting PHP version
       set_fact:
         php_path: 'etc/php5'  #no leading / for template path
         php_ver: 5
-      when: >
-            ansible_distribution == "Debian" or
-            (ansible_distribution == "Ubuntu" and
-            ansible_distribution_version <= '14.04')
-
-    - name: setting PHP version
-      set_fact:
-        php_path: 'etc/php/7.0'  #no leading / for template path
-        php_ver: 7.0
-      when: >
-            (ansible_distribution == "Ubuntu" and
-            ansible_distribution_version >= '16.04')
+      when: ansible_os_family == 'Alpine'
 
     - name: Installing Apache2
       apk:
@@ -49,7 +38,7 @@
 
     - name: Installing PHP
       apk:
-        name: "php5-apache2"
+        name: "php{{ php_ver }}-apache2"
         state: "present"
       when: >
             apache2_enable_php == "true"
