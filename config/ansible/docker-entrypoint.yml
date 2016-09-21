@@ -9,14 +9,6 @@
       apk:
         update_cache: yes
 
-    - name: Installing Pre-Reqs
-      apk:
-        name: "{{ item }}"
-        state: "present"
-      with_items:
-        - 'rsyslog'
-        - 'supervisor'
-
     - name: setting Alpine facts
       set_fact:
         apache2_log_dir: "/var/log/apache2"
